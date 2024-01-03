@@ -13,3 +13,12 @@
 from flask import Flask,render_template
 from pandas import DataFrame
 
+app = Flask(__name__)
+
+
+@app.route('/')
+def shop():
+    pass
+
+
+app.run(port=8000)
