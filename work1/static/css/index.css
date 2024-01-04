@@ -30,17 +30,28 @@ li{
     margin-bottom: 2em;
 }
 .menu {
-    position: absolute;
-    margin-left:200px;
-    margin-top:200px;
+
+    margin-right:20px;
     border: 4mm ridge rgba(211, 220, 50, .6);
 }
 
+.pic {
+    display: flex;
+    justify-content: center;
+    gap: 30px
+}
+
+.menu_pic {
+    margin:100px 0 0 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .footer {
-    position: relative;
+
     display: flex;
     justify-content: center;
     gap: 100px;
-    margin-top: 40em;
-    margin-bottom: 2em
+    margin-top: 10em;
 }

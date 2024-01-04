@@ -11,14 +11,26 @@
 """
 
 from flask import Flask,render_template
-from pandas import DataFrame
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/1/')
 def shop():
-    pass
+    context = {'title': 'Одежда'}
+    return render_template('clothes.html',**context)
+
+
+@app.route('/2/')
+def shop2():
+    context = {'title': 'Куртки'}
+    return render_template('jackets.html',**context)
+
+
+@app.route('/3/')
+def shop3():
+    context = {'title': 'Обувь'}
+    return render_template('shoes.html',**context)
 
 
 app.run(port=8000)
