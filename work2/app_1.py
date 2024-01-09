@@ -10,20 +10,29 @@
 и произведено перенаправление на страницу ввода имени и электронной почты.
 """
 
-from flask import Flask,render_template
-import secrets
+from flask import Flask,render_template,make_response,request,url_for,redirect
 
 app = Flask(__name__)
-secret_code = secrets.token_hex()
 
 
-@app.route("/")
-def input_():
+@app.get("/")
+def get_():
     return render_template("input.html")
 
 
-@app.route("/greeting/")
-def greeting():
-    return render_template("greeting.html")
+@app.post("/")
+def post_():
+    response = make_response(render_template("input.html"))
+    name = request.form['us_name']
+    mail = request.form['el_mail']
+    response.set_cookie('us',name)
+    response.set_cookie('el',mail)
+    return redirect(url_for("greeting",name=name))
 
-app.run()
+
+@app.route("/greeting/<string:name>")
+def greeting(name):
+    return render_template("greeting.html",name=name)
+
+
+app.run(debug=True)
