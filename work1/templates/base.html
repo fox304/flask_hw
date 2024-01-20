@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="../static/css/index.css">
+</head>
+<body>
+<div class="hat">
+    <li><img src="../static/images/pic.png" width="70" height="30"></li>
+    <li><a href="#" alt="">Уведомления</a></li>
+    <li><a href="#" alt="">Войти</a></li>
+    <li><a href="#" alt="">Мои заказы</a></li>
+    <li><a href="#" alt="">Корзина</a></li>
+</div>
+<div class="menu_pic">
+    <div class="menu">
+        <li><a href="/1/">одежда</a></li>
+        <li><a href="/2/">куртка</a></li>
+        <li><a href="/3/">обувь</a></li>
+    </div>
+
+    {% block cloth %}
+    <p>не удалось</p>
+    {% endblock %}
+</div>
+
+
+<div class="footer">
+    <span>© 2024 ООО “Интернет Проекты”</span>
+    <span>Этот сайт защищен reCAPTCHA и Google</span>
+    <span><a href="#" alt="">Политика конфиденциальности</a></span>
+    <span><a href="#" alt="">Условия использования</a></span>
+</div>
+
+
+</body>
+</html>
