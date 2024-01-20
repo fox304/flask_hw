@@ -6,12 +6,13 @@
     {% for field in form if  field.name != 'csrf_token' %}
         {{ field.label }}<br>
         {{ field }}<br>
-        {% if field.errors %}
             <ul>
-                вводить нужно правильно<br>
-                {{ field.errors }}
+            {% for error in obj.errors %}
+                <li>
+                    <span style="color: red;">{{ error }}</span>
+                </li>
+            {% endfor %}
             </ul>
-        {% endif %}
     {% endfor %}
     <input type="submit" value="Зарегистрироваться">
 </form>
