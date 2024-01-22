@@ -8,11 +8,13 @@
 — Программа должна выводить в консоль информацию о времени скачивания каждого изображения
   и общем времени выполнения программы.
 """
+import asyncio
 import multiprocessing
 import os.path
 import threading
 import time
 
+import aiohttp
 import requests
 
 urls = [
@@ -29,13 +31,19 @@ def decorator_(func):
 	def wrap():
 		for url in urls:
 			func(url)
+	return wrap
 
+
+def decorator_for_async(func):
+	async def wrap():
+		list_ = [asyncio.ensure_future(func(url)) for url in urls]
+		await asyncio.gather(*list_)
 	return wrap
 
 
 def function(url):
-	name = url.split('/')[-1]
-	with open('images' + '/' + name, 'wb') as f:
+	name = 'images' + '/' + url.split('/')[-1]
+	with open(name, 'wb') as f:
 		f.write(requests.get(url).content)
 
 
@@ -56,6 +64,18 @@ def proc_(arg):
 	p.start()
 
 
+@decorator_for_async
+async def async_(url):
+	async with aiohttp.ClientSession() as session:
+		async with session.get(url) as response:
+			name = 'images' + '/' + url.split('/')[-1]
+			text = await response.content.read()
+			with open(name, 'wb') as f:
+				f.write(text)
+
+
+
+
 if __name__ == '__main__':
 	if not os.path.exists('images'):
 		os.mkdir('images')
@@ -70,4 +90,11 @@ if __name__ == '__main__':
 
 	start = time.time()
 	proc_()
+	print(time.time() - start)
+
+	start = time.time()
+
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(async_())
+
 	print(time.time() - start)
