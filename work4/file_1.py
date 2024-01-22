@@ -16,6 +16,17 @@ import time
 
 import aiohttp
 import requests
+from sys import argv
+
+
+"""						это исходники для использования в командной строке
+
+	'https://proprikol.ru/wp-content/uploads/2020/12/salyut-krasivye-kartinki-49.jpg '
+	'https://foni.club/uploads/posts/2023-01/1673046339_foni-club-p-oboi-san-frantsisko-70.jpg'
+	
+						вводить через пробел, скопировав каждую строку
+	
+"""
 
 urls = [
 	'https://vplate.ru/images/article/orig/2020/03/idei-dlya-novogodnih-vecherinok.jpg',
@@ -28,16 +39,25 @@ urls = [
 
 
 def decorator_(func):
+	"""декоратор для синхронной, потоковой и мультипроцессорной функций
+		перебирает urls и фиксирует время работы"""
 	def wrap():
+		start = time.time()
 		for url in urls:
 			func(url)
+		print(f'Испльзована функция {func.__name__}, за {time.time() - start} секунд')
+
 	return wrap
 
 
 def decorator_for_async(func):
+	"""   декоратор для асинхронной функции
+	   перебирает urls и фиксирует время работы"""
 	async def wrap():
+		start = time.time()
 		list_ = [asyncio.ensure_future(func(url)) for url in urls]
 		await asyncio.gather(*list_)
+		print(f'Испльзована функция {func.__name__}, за {time.time() - start} секунд')
 	return wrap
 
 
@@ -74,27 +94,15 @@ async def async_(url):
 				f.write(text)
 
 
-
-
 if __name__ == '__main__':
 	if not os.path.exists('images'):
 		os.mkdir('images')
+	if len(argv) != 1:
+		urls = argv[1:]
 
-	start = time.time()
 	sync_()
-	print(time.time() - start)
-
-	start = time.time()
 	thread_()
-	print(time.time() - start)
-
-	start = time.time()
 	proc_()
-	print(time.time() - start)
-
-	start = time.time()
 
 	loop = asyncio.get_event_loop()
 	loop.run_until_complete(async_())
-
-	print(time.time() - start)
