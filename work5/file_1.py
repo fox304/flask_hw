@@ -13,18 +13,34 @@ API должен содержать следующие конечные точк
 Для каждой конечной точки необходимо проводить валидацию данных запроса и ответа.
 Для этого использовать библиотеку Pydantic.
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from typing import List
-
+import pandas as pd
 from hw.work5.model import Tasks
 
-list_ = []
 app = FastAPI()
 
+templates = Jinja2Templates(directory='hw/work5/templates')
 
-@app.get('/', response_model=List[Tasks])
-def list_of_tasks():
-	return list_
-
+list_ = []
 
 
+@app.get('/tasks/', response_class=HTMLResponse)
+def list_of_tasks(requ: Request):
+	table = pd.DataFrame([vars(task) for task in list_]).to_html()
+	return templates.TemplateResponse('tasks_html.html', {'request': requ, 'table': table})
+
+
+@app.get('/tasks/{id}', response_model=Tasks)
+def select_task(task: Tasks):
+	task_num = [task for task in list_ if task.id == id]
+	return task_num
+
+
+@app.post('/tasks/', response_model=Tasks)
+def set_task(task: Tasks):
+	task.id = len(list_) + 1
+	list_.append(task)
+	return task
