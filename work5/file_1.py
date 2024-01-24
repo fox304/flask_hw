@@ -33,10 +33,10 @@ def list_of_tasks(requ: Request):
 	return templates.TemplateResponse('tasks_html.html', {'request': requ, 'table': table})
 
 
-@app.get('/tasks/{id}', response_model=Tasks)
-def select_task(task: Tasks):
-	task_num = [task for task in list_ if task.id == id]
-	return task_num
+@app.get('/tasks/{num}', response_model=Tasks)
+def select_task(num: int):
+	task_num = [task for task in list_ if task.id == num]
+	return task_num[0]
 
 
 @app.post('/tasks/', response_model=Tasks)
@@ -44,3 +44,12 @@ def set_task(task: Tasks):
 	task.id = len(list_) + 1
 	list_.append(task)
 	return task
+
+
+@app.put('/tasks/{id}', response_model=Tasks)
+def update_task(id: int, task: Tasks):
+	task_num = [task_ for task_ in list_ if task.id == id]
+	task.id = id
+	list_[id-1] = task
+	return task
+
