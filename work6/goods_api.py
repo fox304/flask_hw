@@ -1,4 +1,6 @@
-from hw.work6.main import *
+# from hw.work6.main import *
+from main import *
+
 
 @app.post("/")
 async def create_product(product: Goods):
@@ -9,14 +11,14 @@ async def create_product(product: Goods):
 @app.get("/goods/", response_class=HTMLResponse)
 async def get_products(request: Request):
 	query = goods.select()
-	our_table = pd.DataFrame( product for product in await database.fetch_all(query)).to_html()
+	our_table = pd.DataFrame(product for product in await database.fetch_all(query)).to_html()
 	return templates.TemplateResponse("goods.html", {"request": request, "goods_table": our_table})
 
 
 @app.get("/product/{num}", response_model=Goods)
 async def get_product(num: int):
 	query = goods.select().where(goods.c.id == num)
-	pd.DataFrame( product for product in await database.fetch_all(query)).to_html()
+	pd.DataFrame(product for product in await database.fetch_all(query)).to_html()
 	return await database.fetch_one(query)
 
 

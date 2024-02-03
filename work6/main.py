@@ -22,13 +22,11 @@
 import databases
 import sqlalchemy
 from fastapi import FastAPI, Request
-from  fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
-from sqlalchemy import DateTime
+from datetime import date
 import pandas as pd
-
-
 
 DATABASE_URL = "sqlite:///mydatabase.db"
 database = databases.Database(DATABASE_URL)
@@ -45,20 +43,20 @@ users = sqlalchemy.Table("Пользователи",
 
 goods = sqlalchemy.Table("Товары",
 						 metadata,
-                         sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+						 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
 						 sqlalchemy.Column("name", sqlalchemy.Integer),
 						 sqlalchemy.Column("description", sqlalchemy.String(200)),
 						 sqlalchemy.Column("price", sqlalchemy.String(500)),
 						 )
 
 orders = sqlalchemy.Table("Заказы",
-						 metadata,
-						 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-						 sqlalchemy.Column("id_user", sqlalchemy.ForeignKey('Пользователи.id')),
-						 sqlalchemy.Column("id_goods", sqlalchemy.ForeignKey('Товары.id')),
-						 sqlalchemy.Column("status", sqlalchemy.String(32)),
-						 sqlalchemy.Column("date", sqlalchemy.String(128)),
-						 )
+						  metadata,
+						  sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+						  sqlalchemy.Column("id_user", sqlalchemy.ForeignKey('Пользователи.id')),
+						  sqlalchemy.Column("id_good", sqlalchemy.ForeignKey('Товары.id')),
+						  sqlalchemy.Column("status", sqlalchemy.String(32)),
+						  sqlalchemy.Column("date", sqlalchemy.String(128)),
+						  )
 
 engine = sqlalchemy.create_engine(DATABASE_URL,
 								  connect_args={"check_same_thread": False})
@@ -66,8 +64,6 @@ metadata.create_all(engine)
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-
-
 
 
 class Users(BaseModel):
@@ -84,15 +80,7 @@ class Goods(BaseModel):
 
 
 class Orders(BaseModel):
-	# id_user: int = Field(max_length=1000)
-	# id_goods: int = Field(max_length=1000)
-	status: bool = Field(default=False)
-	date: str = Field(default=DateTime)
-
-
-
-
-
-
-
-
+	id_user: int = Field(ge=1)
+	id_good: int = Field(ge=1)
+	status: bool = Field(default_factory=False)
+	date: date

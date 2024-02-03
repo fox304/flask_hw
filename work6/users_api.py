@@ -1,6 +1,6 @@
-import pandas as pd
+# from hw.work6.main import *
+from main import *
 
-from hw.work6.main import *
 
 @app.post("/")
 async def create_user(user: Users):
@@ -11,14 +11,14 @@ async def create_user(user: Users):
 @app.get("/users/", response_class=HTMLResponse)
 async def get_users(request: Request):
 	query = users.select()
-	our_table = pd.DataFrame( user for user in await database.fetch_all(query)).to_html()
+	our_table = pd.DataFrame(user for user in await database.fetch_all(query)).to_html()
 	return templates.TemplateResponse("users.html", {"request": request, "user_table": our_table})
 
 
 @app.get("/user/{num}", response_model=Users)
 async def get_user(num: int):
 	query = users.select().where(users.c.id == num)
-	our_table = pd.DataFrame( user for user in await database.fetch_all(query)).to_html()
+	our_table = pd.DataFrame(user for user in await database.fetch_all(query)).to_html()
 	return await database.fetch_one(query)
 
 
