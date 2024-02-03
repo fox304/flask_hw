@@ -21,9 +21,13 @@
 """
 import databases
 import sqlalchemy
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from  fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 from sqlalchemy import DateTime
+import pandas as pd
+
 
 
 DATABASE_URL = "sqlite:///mydatabase.db"
@@ -50,8 +54,8 @@ goods = sqlalchemy.Table("Товары",
 orders = sqlalchemy.Table("Заказы",
 						 metadata,
 						 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-						 # sqlalchemy.Column("id_user", sqlalchemy.ForeignKey('Пользователи.id')),
-						 # sqlalchemy.Column("id_goods", sqlalchemy.ForeignKey('Товары.id')),
+						 sqlalchemy.Column("id_user", sqlalchemy.ForeignKey('Пользователи.id')),
+						 sqlalchemy.Column("id_goods", sqlalchemy.ForeignKey('Товары.id')),
 						 sqlalchemy.Column("status", sqlalchemy.String(32)),
 						 sqlalchemy.Column("date", sqlalchemy.String(128)),
 						 )
@@ -61,7 +65,7 @@ engine = sqlalchemy.create_engine(DATABASE_URL,
 metadata.create_all(engine)
 
 app = FastAPI()
-
+templates = Jinja2Templates(directory="templates")
 
 
 
@@ -70,7 +74,7 @@ class Users(BaseModel):
 	first_name: str = Field(max_length=10)
 	second_name: str = Field(max_length=20)
 	email: str = Field(max_length=20)
-	password: int = Field(max_length=20, min_length=4)
+	password: str = Field(max_length=20, min_length=4)
 
 
 class Goods(BaseModel):
