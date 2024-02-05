@@ -33,33 +33,33 @@ database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
 users = sqlalchemy.Table("Пользователи",
-						 metadata,
-						 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-						 sqlalchemy.Column("first_name", sqlalchemy.String(10)),
-						 sqlalchemy.Column("second_name", sqlalchemy.String(10)),
-						 sqlalchemy.Column("email", sqlalchemy.String(32)),
-						 sqlalchemy.Column("password", sqlalchemy.String(128)),
-						 )
+			 metadata,
+			 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+			 sqlalchemy.Column("first_name", sqlalchemy.String(10)),
+			 sqlalchemy.Column("second_name", sqlalchemy.String(10)),
+			 sqlalchemy.Column("email", sqlalchemy.String(32)),
+			 sqlalchemy.Column("password", sqlalchemy.String(128)),
+			 )
 
 goods = sqlalchemy.Table("Товары",
-						 metadata,
-						 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-						 sqlalchemy.Column("name", sqlalchemy.Integer),
-						 sqlalchemy.Column("description", sqlalchemy.String(200)),
-						 sqlalchemy.Column("price", sqlalchemy.String(500)),
-						 )
+			 metadata,
+			 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+			 sqlalchemy.Column("name", sqlalchemy.Integer),
+			 sqlalchemy.Column("description", sqlalchemy.String(200)),
+			 sqlalchemy.Column("price", sqlalchemy.String(500)),
+			 )
 
 orders = sqlalchemy.Table("Заказы",
-						  metadata,
-						  sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-						  sqlalchemy.Column("id_user", sqlalchemy.ForeignKey('Пользователи.id')),
-						  sqlalchemy.Column("id_good", sqlalchemy.ForeignKey('Товары.id')),
-						  sqlalchemy.Column("status", sqlalchemy.String(32)),
-						  sqlalchemy.Column("date", sqlalchemy.String(128)),
-						  )
+			  metadata,
+			  sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+			  sqlalchemy.Column("id_user", sqlalchemy.ForeignKey('Пользователи.id')),
+			  sqlalchemy.Column("id_good", sqlalchemy.ForeignKey('Товары.id')),
+			  sqlalchemy.Column("status", sqlalchemy.String(32)),
+			  sqlalchemy.Column("date", sqlalchemy.String(128)),
+			  )
 
 engine = sqlalchemy.create_engine(DATABASE_URL,
-								  connect_args={"check_same_thread": False})
+				  connect_args={"check_same_thread": False})
 metadata.create_all(engine)
 
 app = FastAPI()
